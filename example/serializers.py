@@ -1,6 +1,6 @@
 from datetime import datetime
 from rest_framework_json_api import serializers, relations
-from example.models import Blog, Entry, Author, AuthorBio, Comment
+from example.models import Blog, Entry, Author, AuthorBio, Comment, PhoneNumbers
 
 
 class BlogSerializer(serializers.ModelSerializer):
@@ -61,15 +61,22 @@ class AuthorBioSerializer(serializers.ModelSerializer):
         model = AuthorBio
         fields = ('author', 'body',)
 
+class PhoneNumbersSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PhoneNumbers
+        fields = ('phone_numbers',)
+
 
 class AuthorSerializer(serializers.ModelSerializer):
     included_serializers = {
-        'bio': AuthorBioSerializer
+        'bio': AuthorBioSerializer,
+        'phone_numbers': PhoneNumbersSerializer
     }
 
     class Meta:
         model = Author
-        fields = ('name', 'email', 'bio')
+        fields = ('name', 'email', 'phone_numbers', 'bio')
 
 
 class CommentSerializer(serializers.ModelSerializer):

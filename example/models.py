@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericRelation
 
 
 class BaseModel(models.Model):
@@ -26,9 +29,18 @@ class Blog(BaseModel):
 
 
 @python_2_unicode_compatible
+class PhoneNumbers(BaseModel):
+    phone_numbers = models.TextField(blank=True, null=True)
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+
+@python_2_unicode_compatible
 class Author(BaseModel):
     name = models.CharField(max_length=50)
     email = models.EmailField()
+    phone_numbers = GenericRelation(PhoneNumbers)
 
     def __str__(self):
         return self.name
@@ -71,4 +83,6 @@ class Comment(BaseModel):
 
     def __str__(self):
         return self.body
+
+
 
